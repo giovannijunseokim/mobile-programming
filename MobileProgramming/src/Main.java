@@ -1,179 +1,50 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Random;
 
 public class Main {
-    // 테트리스 조각들
-    private static int[][][][] setOfBlockArrays = { // [7][4][?][?]
-            {
-                    {
-                            {1, 1},
-                            {1, 1}
-                    },
-                    {
-                            {1, 1},
-                            {1, 1}
-                    },
-                    {
-                            {1, 1},
-                            {1, 1}
-                    },
-                    {
-                            {1, 1},
-                            {1, 1}
-                    }
-            },
-            {
-                    {
-                            {0, 1, 0},
-                            {1, 1, 1},
-                            {0, 0, 0},
-                    },
-                    {
-                            {0, 1, 0},
-                            {0, 1, 1},
-                            {0, 1, 0},
-                    },
-                    {
-                            {0, 0, 0},
-                            {1, 1, 1},
-                            {0, 1, 0},
-                    },
-                    {
-                            {0, 1, 0},
-                            {1, 1, 0},
-                            {0, 1, 0},
-                    },
-            },
-            {
-                    {
-                            {1, 0, 0},
-                            {1, 1, 1},
-                            {0, 0, 0},
-                    },
-                    {
-                            {0, 1, 1},
-                            {0, 1, 0},
-                            {0, 1, 0},
-                    },
-                    {
-                            {0, 0, 0},
-                            {1, 1, 1},
-                            {0, 0, 1},
-                    },
-                    {
-                            {0, 1, 0},
-                            {0, 1, 0},
-                            {1, 1, 0},
-                    },
-            },
-            {
-                    {
-                            {0, 0, 1},
-                            {1, 1, 1},
-                            {0, 0, 0},
-                    },
-                    {
-                            {0, 1, 0},
-                            {0, 1, 0},
-                            {0, 1, 1},
-                    },
-                    {
-                            {0, 0, 0},
-                            {1, 1, 1},
-                            {1, 0, 0},
-                    },
-                    {
-                            {1, 1, 0},
-                            {0, 1, 0},
-                            {0, 1, 0},
-                    },
-            },
-            {
-                    {
-                            {0, 1, 0},
-                            {1, 1, 0},
-                            {1, 0, 0},
-                    },
-                    {
-                            {1, 1, 0},
-                            {0, 1, 1},
-                            {0, 0, 0},
-                    },
-                    {
-                            {0, 1, 0},
-                            {1, 1, 0},
-                            {1, 0, 0},
-                    },
-                    {
-                            {1, 1, 0},
-                            {0, 1, 1},
-                            {0, 0, 0},
-                    },
-            },
-            {
-                    {
-                            {0, 1, 0},
-                            {0, 1, 1},
-                            {0, 0, 1},
-                    },
-                    {
-                            {0, 0, 0},
-                            {0, 1, 1},
-                            {1, 1, 0},
-                    },
-                    {
-                            {0, 1, 0},
-                            {0, 1, 1},
-                            {0, 0, 1},
-                    },
-                    {
-                            {0, 0, 0},
-                            {0, 1, 1},
-                            {1, 1, 0},
-                    },
-            },
-            {
-                    {
-                            {0, 0, 0, 0},
-                            {1, 1, 1, 1},
-                            {0, 0, 0, 0},
-                            {0, 0, 0, 0},
-                    },
-                    {
-                            {0, 1, 0, 0},
-                            {0, 1, 0, 0},
-                            {0, 1, 0, 0},
-                            {0, 1, 0, 0},
-                    },
-                    {
-                            {0, 0, 0, 0},
-                            {1, 1, 1, 1},
-                            {0, 0, 0, 0},
-                            {0, 0, 0, 0},
-                    },
-                    {
-                            {0, 1, 0, 0},
-                            {0, 1, 0, 0},
-                            {0, 1, 0, 0},
-                            {0, 1, 0, 0},
-                    },
-            },
-    }; // end of setOfBlockArrays
-    // 입력받는 객체
+    static int[][] arrayBlk = {
+            { 0, 0, 1, 0 },
+            { 0, 0, 1, 0 },
+            { 0, 0, 1, 0 },
+            { 0, 0, 1, 0 },
+    };
+    private static int iScreenDy = 15;
+    private static int iScreenDx = 10;
+    private static int iScreenDw = 4; // large enough to cover the largest block
+    private static int[][] createArrayScreen(int dy, int dx, int dw) {
+        int y, x;
+        int[][] array = new int[dy + dw][dx + 2*dw];
+        for (y = 0; y < array.length; y++)
+            for (x = 0; x < dw; x++)
+                array[y][x] = 1;
+        for (y = 0; y < array.length; y++)
+            for (x = dw + dx; x < array[0].length; x++)
+                array[y][x] = 1;
+        for (y = dy; y < array.length; y++)
+            for (x = 0; x < array[0].length; x++)
+                array[y][x] = 1;
+        return array;
+    }
+    public static void drawMatrix(Matrix m) {
+        int dy = m.get_dy();
+        int dx = m.get_dx();
+        int array[][] = m.get_array();
+        for (int y=0; y < dy; y++) {
+            for (int x=0; x < dx; x++) {
+                if (array[y][x] == 0) System.out.print("□ ");
+                else if (array[y][x] == 1) System.out.print("■ ");
+                else System.out.print("X ");
+            }
+            System.out.println();
+        }
+    }
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    // 입력 String
     private static String line = null;
-    // String 내부 char의 개수
     private static int nKeys = 0;
-
-    // 입력 키 받기
     private static char getKey() throws IOException {
         char ch;
-        // 아직 입력받은 String이 있음.
         if (nKeys != 0) {
-            // 맨 첫 번째(아직 안 쓴) 사용
             ch = line.charAt(line.length() - nKeys);
             nKeys--;
             return ch;
@@ -182,51 +53,63 @@ public class Main {
             line = br.readLine();
             nKeys = line.length();
         } while (nKeys == 0);
-        // String의 맨 첫번째 char
         ch = line.charAt(0);
-        // char 하나 줄음
         nKeys--;
         return ch;
     }
-
-    // 0이면 □, 1이면 ■로 그림
-    public static void drawMatrix(Matrix m) {
-        int dy = m.get_dy();
-        int dx = m.get_dx();
-        int array[][] = m.get_array();
-        for (int y = 0; y < dy; y++) {
-            for (int x = 0; x < dx; x++) {
-                if (array[y][x] == 0) System.out.print("□ ");
-                else if (array[y][x] == 1) System.out.print("■ ");
-                else System.out.print("X ");
-            }
-            System.out.println();
-        }
-    }
-
     public static void main(String[] args) throws Exception {
+        boolean newBlockNeeded = false;
+        int top = 0;
+        int left = iScreenDw + iScreenDx/2 - 2;
+        int[][] arrayScreen = createArrayScreen(iScreenDy, iScreenDx, iScreenDw);
         char key;
-        TetrisState state;
-        Tetris.init(setOfBlockArrays);
-        Tetris board = new Tetris(15, 10);
-        Random random = new Random();
-        key = (char) ('0' + random.nextInt(7));
-        board.accept(key);
-        drawMatrix(board.get_oScreen());
-        System.out.println();
-
+        Matrix iScreen = new Matrix(arrayScreen);
+        Matrix currBlk = new Matrix(arrayBlk);
+        Matrix tempBlk = iScreen.clip(top, left, top+currBlk.get_dy(), left+currBlk.get_dx());
+        tempBlk = tempBlk.add(currBlk);
+        Matrix oScreen = new Matrix(iScreen);
+        oScreen.paste(tempBlk, top, left);
+        drawMatrix(oScreen); System.out.println();
         while ((key = getKey()) != 'q') {
-            state = board.accept(key);
-            drawMatrix(board.get_oScreen());
-            System.out.println();
-            if (state == TetrisState.NewBlock) {
-                key = (char) ('0' + random.nextInt(7));
-                state = board.accept(key);
-                drawMatrix(board.get_oScreen());
-                System.out.println();
-                if (state == TetrisState.Finished) break; // Game Over!
+            switch(key) {
+                case 'a': left--; break; // move left
+                case 'd': left++; break; // move right
+                case 's': top++; break; // move down
+                case 'w': break; // rotate the block clockwise
+                case ' ': break; // drop the block
+                default: System.out.println("unknown key!");
+            }
+            tempBlk = iScreen.clip(top, left, top+currBlk.get_dy(), left+currBlk.get_dx());
+            tempBlk = tempBlk.add(currBlk);
+            if (tempBlk.anyGreaterThan(1)) {
+                switch(key) {
+                    case 'a': left++; break; // undo: move right
+                    case 'd': left--; break; // undo: move left
+                    case 's': top--; newBlockNeeded = true; break; // undo: move up
+                    case 'w': break; // undo: rotate the block counter-clockwise
+                    case ' ': break; // undo: move up
+                }
+                tempBlk = iScreen.clip(top, left, top+currBlk.get_dy(), left+currBlk.get_dx());
+                tempBlk = tempBlk.add(currBlk);
+            }
+            oScreen = new Matrix(iScreen);
+            oScreen.paste(tempBlk, top, left);
+            drawMatrix(oScreen); System.out.println();
+            if (newBlockNeeded) {
+                iScreen = new Matrix(oScreen);
+                top = 0; left = iScreenDw + iScreenDx/2 - 2;
+                newBlockNeeded = false;
+                currBlk = new Matrix(arrayBlk);
+                tempBlk = iScreen.clip(top, left, top+currBlk.get_dy(), left+currBlk.get_dx());
+                tempBlk = tempBlk.add(currBlk);
+                if (tempBlk.anyGreaterThan(1)) {
+                    System.out.println("Game Over!");
+                    System.exit(0);
+                }
+                oScreen = new Matrix(iScreen);
+                oScreen.paste(tempBlk, top, left);
+                drawMatrix(oScreen); System.out.println();
             }
         }
-        System.out.println("Program terminated!");
     }
 }
