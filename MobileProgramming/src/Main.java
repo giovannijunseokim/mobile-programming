@@ -134,75 +134,75 @@ public class Main {
             });
 
             degree0LTetromino = new Matrix(new int[][]{
-                    {1, 0, 0},
+                    {0, 0, 1},
                     {1, 1, 1},
                     {0, 0, 0},
             });
 
             degree90LTetromino = new Matrix(new int[][]{
+                    {0, 1, 0},
+                    {0, 1, 0},
                     {0, 1, 1},
-                    {0, 1, 0},
-                    {0, 1, 0},
             });
 
             degree180LTetromino = new Matrix(new int[][]{
                     {0, 0, 0},
                     {1, 1, 1},
-                    {0, 0, 1},
+                    {1, 0, 0},
             });
 
             degree270LTetromino = new Matrix(new int[][]{
-                    {0, 1, 0},
-                    {0, 1, 0},
                     {1, 1, 0},
+                    {0, 1, 0},
+                    {0, 1, 0},
             });
 
             degree0STetromino = new Matrix(new int[][]{
-                    {1, 0, 0},
-                    {1, 1, 1},
+                    {0, 1, 1},
+                    {1, 1, 0},
                     {0, 0, 0},
             });
 
             degree90STetromino = new Matrix(new int[][]{
+                    {0, 1, 0},
                     {0, 1, 1},
-                    {0, 1, 0},
-                    {0, 1, 0},
+                    {0, 0, 1},
             });
 
             degree180STetromino = new Matrix(new int[][]{
                     {0, 0, 0},
-                    {1, 1, 1},
-                    {0, 0, 1},
-            });
-
-            degree270STetromino = new Matrix(new int[][]{
-                    {0, 1, 0},
-                    {0, 1, 0},
+                    {0, 1, 1},
                     {1, 1, 0},
             });
 
-            degree0ZTetromino = new Matrix(new int[][]{
+            degree270STetromino = new Matrix(new int[][]{
                     {1, 0, 0},
-                    {1, 1, 1},
+                    {1, 1, 0},
+                    {0, 1, 0},
+            });
+
+            degree0ZTetromino = new Matrix(new int[][]{
+                    {1, 1, 0},
+                    {0, 1, 1},
                     {0, 0, 0},
             });
 
             degree90ZTetromino = new Matrix(new int[][]{
+                    {0, 0, 1},
                     {0, 1, 1},
-                    {0, 1, 0},
                     {0, 1, 0},
             });
 
             degree180ZTetromino = new Matrix(new int[][]{
                     {0, 0, 0},
-                    {1, 1, 1},
-                    {0, 0, 1},
+                    {1, 1, 0},
+                    {0, 1, 1},
             });
 
             degree270ZTetromino = new Matrix(new int[][]{
                     {0, 1, 0},
-                    {0, 1, 0},
                     {1, 1, 0},
+                    {1, 0, 0},
             });
         } catch (MatrixException e) {
             throw new RuntimeException(e);
@@ -239,28 +239,22 @@ public class Main {
 
     static Matrix[][] setOfBlockObjects = new Matrix[][]{iTetrominos, oTetrominos, tTetrominos, jTetrominos, lTetrominos, sTetrominos, zTetrominos};
 
-    static int[][] arrayBlk = {
-            {0, 0, 1, 0},
-            {0, 0, 1, 0},
-            {0, 0, 1, 0},
-            {0, 0, 1, 0},
-    };
-    private static int iScreenDy = 15;
-    private static int iScreenDx = 10;
-    private static int iScreenDw = 4; // large enough to cover the largest block
+    private static int iScreenDy = 15; // 사용 가능한 빈 칸의 세로 길이
+    private static int iScreenDx = 10; // 사용 가능한 빈 칸의 가로 길이
+    private static int iScreenDw = 4; // large enough to cover the largest block : 벽의 두께
 
     private static int[][] createArrayScreen(int dy, int dx, int dw) {
         int y, x;
-        int[][] array = new int[dy + dw][dx + 2 * dw];
-        for (y = 0; y < array.length; y++)
-            for (x = 0; x < dw; x++)
-                array[y][x] = 1;
-        for (y = 0; y < array.length; y++)
-            for (x = dw + dx; x < array[0].length; x++)
-                array[y][x] = 1;
-        for (y = dy; y < array.length; y++)
-            for (x = 0; x < array[0].length; x++)
-                array[y][x] = 1;
+        int[][] array = new int[dy + dw][dx + 2 * dw]; // 전체 크기(벽 포함)
+        for (y = 0; y < array.length; y++) // array.length = dy + dx == 전체 세로 길이만큼 반복(15 + 4)
+            for (x = 0; x < dw; x++) // 벽 두께만큼 가로로 반복 (4)
+                array[y][x] = 1; // 왼쪽 벽
+        for (y = 0; y < array.length; y++) // 전체 세로 크기만큼
+            for (x = dw + dx; x < array[0].length; x++) // dw+dx 부터(흰 공간의 끝) 가로 끝 까지
+                array[y][x] = 1; // 오른쪽 벽
+        for (y = dy; y < array.length; y++) // 흰 부분 끝부터 바닥까지
+            for (x = 0; x < array[0].length; x++) // 가로 전체
+                array[y][x] = 1; // 바닥 벽
         return array;
     }
 
@@ -301,27 +295,33 @@ public class Main {
     private static final int blockTypes = 7;
     private static final int blockDegrees = 4;
 
-    static Random random = new Random();
-    static int idxBlockType = random.nextInt(blockTypes);
-    static int idxBlockDegree = random.nextInt(blockDegrees);
+    private static final Random random = new Random();
+    private static int idxBlockType = random.nextInt(blockTypes);
+    private static int idxBlockDegree = 0;
 
-    private static void rotateBlock() {
-        idxBlockDegree = (idxBlockDegree + 1) % 4;
+    private static Matrix getClockwiseRotatedBlock() {
+        idxBlockDegree = (idxBlockDegree + 1) % blockDegrees;
+        return setOfBlockObjects[idxBlockType][idxBlockDegree];
+    }
+
+    private static Matrix getCounterClockwiseRotatedBlock() {
+        idxBlockDegree = (idxBlockDegree - 1) % blockDegrees;
+        return setOfBlockObjects[idxBlockType][idxBlockDegree];
     }
 
     public static void main(String[] args) throws Exception {
-        Matrix currBlk = setOfBlockObjects[idxBlockType][idxBlockDegree];
-
+        Matrix currBlk = setOfBlockObjects[idxBlockType][idxBlockDegree]; // 현재 블록
         boolean newBlockNeeded = false;
         int top = 0;
         int left = iScreenDw + iScreenDx / 2 - 2;
         int[][] arrayScreen = createArrayScreen(iScreenDy, iScreenDx, iScreenDw);
         char key;
-        Matrix iScreen = new Matrix(arrayScreen);
+        Matrix iScreen = new Matrix(arrayScreen); // 빈 테트리스
+        // tempBlk = 블록이 들어갈 공간
         Matrix tempBlk = iScreen.clip(top, left, top + currBlk.get_dy(), left + currBlk.get_dx());
-        tempBlk = tempBlk.add(currBlk);
-        Matrix oScreen = new Matrix(iScreen);
-        oScreen.paste(tempBlk, top, left);
+        tempBlk = tempBlk.add(currBlk); // 공간에 현 블록 더함
+        Matrix oScreen = new Matrix(iScreen); // 출력할 테트리스
+        oScreen.paste(tempBlk, top, left); // 출력할 테트리스에 tempBlk 추가
         drawMatrix(oScreen);
         System.out.println();
         while ((key = getKey()) != 'q') {
@@ -336,8 +336,10 @@ public class Main {
                     top++;
                     break; // move down
                 case 'w':
+                    currBlk = getClockwiseRotatedBlock();
                     break; // rotate the block clockwise
                 case ' ':
+                    top = iScreenDy;
                     break; // drop the block
                 default:
                     System.out.println("unknown key!");
@@ -356,10 +358,17 @@ public class Main {
                         top--;
                         newBlockNeeded = true;
                         break; // undo: move up
-                    case 'w':
-                        break; // undo: rotate the block counter-clockwise
                     case ' ':
+                        do {
+                            top--;
+                            tempBlk = iScreen.clip(top, left, top + currBlk.get_dy(), left + currBlk.get_dx());
+                            tempBlk = tempBlk.add(currBlk);
+                        } while (tempBlk.anyGreaterThan(1));
+                        newBlockNeeded = true;
                         break; // undo: move up
+                    case 'w':
+                        currBlk = getCounterClockwiseRotatedBlock();
+                        break; // undo: rotate the block counter-clockwise
                 }
                 tempBlk = iScreen.clip(top, left, top + currBlk.get_dy(), left + currBlk.get_dx());
                 tempBlk = tempBlk.add(currBlk);
@@ -373,7 +382,9 @@ public class Main {
                 top = 0;
                 left = iScreenDw + iScreenDx / 2 - 2;
                 newBlockNeeded = false;
-                currBlk = new Matrix(arrayBlk);
+                idxBlockType = random.nextInt(blockTypes);
+                idxBlockDegree = 0;
+                currBlk = setOfBlockObjects[idxBlockType][idxBlockDegree];
                 tempBlk = iScreen.clip(top, left, top + currBlk.get_dy(), left + currBlk.get_dx());
                 tempBlk = tempBlk.add(currBlk);
                 if (tempBlk.anyGreaterThan(1)) {

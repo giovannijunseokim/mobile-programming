@@ -41,13 +41,13 @@ public class Matrix {
                 array[y][x] = a[y][x];
     }
     public Matrix clip(int top, int left, int bottom, int right) throws MatrixException {
-        int cy = bottom - top;
-        int cx = right - left;
-        Matrix temp = new Matrix(cy, cx);
-        for(int y = 0; y < cy; y++){
-            for(int x = 0; x < cx; x++){
-                if((top+y >= 0) && (left+x >= 0) &&	(top+y < dy) && (left+x < dx))
-                    temp.array[y][x] = array[top+y][left+x];
+        int cy = bottom - top; // 세로 길이
+        int cx = right - left; // 가로 길이
+        Matrix temp = new Matrix(cy, cx); // 새 행렬 생성
+        for(int y = 0; y < cy; y++){ // 세로 길이만큼 반복
+            for(int x = 0; x < cx; x++){ // 가로 길이만큼 반복
+                if((top+y >= 0) && (left+x >= 0) &&	(top+y < dy) && (left+x < dx)) // 범위를 벗어나지 않으면
+                    temp.array[y][x] = array[top+y][left+x]; // 행렬 복사
                 else
                     throw new MatrixException("invalid matrix range");
             }
@@ -63,7 +63,7 @@ public class Matrix {
                     throw new MatrixException("invalid matrix range");
             }
     }
-    public Matrix add(Matrix obj) throws MatrixException {
+    public Matrix add(Matrix obj) throws MatrixException { // 행렬 합
         if((dx != obj.dx) || (dy != obj.dy))
             throw new MismatchedMatrixException("matrix sizes mismatch");
         Matrix temp = new Matrix(dy, dx);
