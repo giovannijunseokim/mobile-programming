@@ -372,6 +372,15 @@ public class Main {
             }
             oScreen = new Matrix(iScreen);
             oScreen.paste(tempBlk, top, left);
+            int fullLine = getFullLine(oScreen);
+            if (fullLine != NO_FULL_LINE) {
+                clearLine(oScreen, fullLine);
+                Matrix screenBelowFullLine = oScreen.clip(fullLine, iScreenDw, iScreenDy, iScreenDw + iScreenDx);
+                Matrix screenAboveFullLine = oScreen.clip(0, iScreenDw, fullLine, iScreenDw + iScreenDx);
+                oScreen = new Matrix(arrayScreen);
+                oScreen.paste(screenBelowFullLine, fullLine, iScreenDw);
+                oScreen.paste(screenAboveFullLine, 1, iScreenDw);
+            }
             drawMatrix(oScreen);
             System.out.println();
             if (newBlockNeeded) {
@@ -395,4 +404,32 @@ public class Main {
             }
         }
     }
+
+    private static void clearLine(Matrix screen, int fullLine) {
+        int[][] array = screen.get_array();
+        int[] lineToClear = array[fullLine];
+        for (int x = iScreenDw; x < iScreenDw + iScreenDx; x++) {
+            lineToClear[x] = 0;
+        }
+    }
+
+    private static int getFullLine(Matrix screen) {
+        int[][] array = screen.get_array();
+        for (int line = 0; line < iScreenDy; line++) {
+            boolean isFullLine = true;
+            for (int x = iScreenDw; x < iScreenDx + iScreenDw; x++) {
+                if (array[line][x] != 1) {
+                    System.out.println();
+                    isFullLine = false;
+                    break;
+                }
+            }
+            if (isFullLine) {
+                return line;
+            }
+        }
+        return NO_FULL_LINE;
+    }
+
+    private static final int NO_FULL_LINE = -1;
 }
