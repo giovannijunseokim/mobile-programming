@@ -239,9 +239,9 @@ public class Main {
 
     static Matrix[][] setOfBlockObjects = new Matrix[][]{iTetrominos, oTetrominos, tTetrominos, jTetrominos, lTetrominos, sTetrominos, zTetrominos};
 
-    private static int iScreenDy = 15; // 사용 가능한 빈 칸의 세로 길이
-    private static int iScreenDx = 10; // 사용 가능한 빈 칸의 가로 길이
-    private static int iScreenDw = 4; // large enough to cover the largest block : 벽의 두께
+    private static final int iScreenDy = 15; // 사용 가능한 빈 칸의 세로 길이
+    private static final int iScreenDx = 10; // 사용 가능한 빈 칸의 가로 길이
+    private static final int iScreenDw = 4; // large enough to cover the largest block : 벽의 두께
 
     private static int[][] createArrayScreen(int dy, int dx, int dw) {
         int y, x;
@@ -339,7 +339,11 @@ public class Main {
                     currBlk = getClockwiseRotatedBlock();
                     break; // rotate the block clockwise
                 case ' ':
-                    top = iScreenDy;
+                    do {
+                        top++;
+                        tempBlk = iScreen.clip(top, left, top + currBlk.get_dy(), left + currBlk.get_dx());
+                        tempBlk = tempBlk.add(currBlk);
+                    } while (!tempBlk.anyGreaterThan(1));
                     break; // drop the block
                 default:
                     System.out.println("unknown key!");
@@ -355,15 +359,8 @@ public class Main {
                         left--;
                         break; // undo: move left
                     case 's':
-                        top--;
-                        newBlockNeeded = true;
-                        break; // undo: move up
                     case ' ':
-                        do {
-                            top--;
-                            tempBlk = iScreen.clip(top, left, top + currBlk.get_dy(), left + currBlk.get_dx());
-                            tempBlk = tempBlk.add(currBlk);
-                        } while (tempBlk.anyGreaterThan(1));
+                        top--;
                         newBlockNeeded = true;
                         break; // undo: move up
                     case 'w':
