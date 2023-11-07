@@ -7,20 +7,20 @@ public class Main {
     private static int[][][][] setOfBlockArrays = { // [7][4][?][?]
             {
                     {
-                            { 1, 1 },
-                            { 1, 1 }
+                            {1, 1},
+                            {1, 1}
                     },
                     {
-                            { 1, 1 },
-                            { 1, 1 }
+                            {1, 1},
+                            {1, 1}
                     },
                     {
-                            { 1, 1 },
-                            { 1, 1 }
+                            {1, 1},
+                            {1, 1}
                     },
                     {
-                            { 1, 1 },
-                            { 1, 1 }
+                            {1, 1},
+                            {1, 1}
                     }
             },
             {
@@ -163,6 +163,7 @@ public class Main {
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     private static String line = null;
     private static int nKeys = 0;
+
     private static char getKey() throws IOException {
         char ch;
         if (nKeys != 0) {
@@ -178,12 +179,13 @@ public class Main {
         nKeys--;
         return ch;
     }
+
     public static void drawMatrix(Matrix m) {
         int dy = m.get_dy();
         int dx = m.get_dx();
         int array[][] = m.get_array();
-        for (int y=0; y < dy; y++) {
-            for (int x=0; x < dx; x++) {
+        for (int y = 0; y < dy; y++) {
+            for (int x = 0; x < dx; x++) {
                 if (array[y][x] == 0) System.out.print("□ ");
                 else if (array[y][x] == 1) System.out.print("■ ");
                 else System.out.print("X ");
@@ -191,23 +193,27 @@ public class Main {
             System.out.println();
         }
     }
+
     public static void main(String[] args) throws Exception {
         char key;
         TetrisState state;
-        Tetris.init(setOfBlockArrays);
-        Tetris board = new Tetris(15, 10);
+        CTetris.init(setOfBlockArrays);
+        CTetris board = new CTetris(15, 10);
         Random random = new Random();
         key = (char) ('0' + random.nextInt(7));
         board.accept(key);
-        drawMatrix(board.get_oScreen()); System.out.println();
+        drawMatrix(board.get_oScreen());
+        System.out.println();
 
         while ((key = getKey()) != 'q') {
             state = board.accept(key);
-            drawMatrix(board.get_oScreen()); System.out.println();
+            drawMatrix(board.get_oScreen());
+            System.out.println();
             if (state == TetrisState.NewBlock) {
                 key = (char) ('0' + random.nextInt(7));
                 state = board.accept(key);
-                drawMatrix(board.get_oScreen()); System.out.println();
+                drawMatrix(board.get_oScreen());
+                System.out.println();
                 if (state == TetrisState.Finished) break; // Game Over!
             }
         }
