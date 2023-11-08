@@ -138,7 +138,7 @@ public class CTetris {
             oScreen.paste(iScreen, 0, 0);
             oScreen.paste(tempBlk, top, left);
             System.out.println();
-            if (tempBlk.anyGreaterThan(1)) {
+            if (tempBlk.isCrashed()) {
                 state = TetrisState.Finished;    // System.out.println("Game Over!");
                 return state;    // System.exit(0);
             }
@@ -164,7 +164,7 @@ public class CTetris {
         }
         tempBlk = iScreen.clip(top, left, top + currBlk.get_dy(), left + currBlk.get_dx());
         tempBlk = tempBlk.add(currBlk);
-        if (tempBlk.anyGreaterThan(1)) {
+        if (tempBlk.isCrashed()) {
             switch (key) {
                 case 'a':
                     left++;

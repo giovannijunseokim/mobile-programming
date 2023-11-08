@@ -114,10 +114,10 @@ public class Matrix {
                 array[y][x] = coef * array[y][x];
     }
 
-    public boolean anyGreaterThan(int val) {
+    public boolean isCrashed() {
         for (int y = 0; y < array.length; y++) {
             for (int x = 0; x < array[0].length; x++) {
-                if (array[y][x] > val) return true;
+                if (array[y][x] % 10 > 1) return true;
             }
         }
         return false;
