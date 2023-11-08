@@ -184,6 +184,7 @@ public class CTetris {
                     left--;
                     break; // undo: move left
                 case 's':
+                case ' ':
                     top--;
                     state = TetrisState.NewBlock;
                     break; // undo: move up
@@ -192,10 +193,6 @@ public class CTetris {
                     else idxBlockDegree = idxBlockDegree - 1;
                     currBlk = setOfBlockObjects[idxBlockType][idxBlockDegree];
                     break; // undo: rotateCCW
-                case ' ':
-                    top--;
-                    state = TetrisState.NewBlock;
-                    break; // undo: move up
             }
             tempBlk = iScreen.clip(top, left, top + currBlk.get_dy(), left + currBlk.get_dx());
             tempBlk = tempBlk.add(currBlk);
