@@ -95,8 +95,17 @@ public class CTetris {
         }
     }
 
-    private Matrix deleteFullLines(Matrix screen, Matrix blk, int top, int dy, int dx, int dw) throws Exception {
-        return screen;
+    private Matrix deleteFullLines() throws Exception {
+        int fullLine = getFullLine(oScreen);
+        if (fullLine != NO_FULL_LINE) {
+            clearLine(oScreen, fullLine);
+            Matrix screenBelowFullLine = oScreen.clip(fullLine, iScreenDw, iScreenDy, iScreenDw + iScreenDx);
+            Matrix screenAboveFullLine = oScreen.clip(0, iScreenDw, fullLine, iScreenDw + iScreenDx);
+            oScreen = new Matrix(createArrayScreen(iScreenDy, iScreenDx, iScreenDw));
+            oScreen.paste(screenBelowFullLine, fullLine, iScreenDw);
+            oScreen.paste(screenAboveFullLine, 1, iScreenDw);
+        }
+        return oScreen;
     }
 
     public void printScreen() {
@@ -129,7 +138,7 @@ public class CTetris {
     public TetrisState accept(char key) throws Exception {
         Matrix tempBlk;
         if (state == TetrisState.NewBlock) {
-            oScreen = deleteFullLines(oScreen, currBlk, top, iScreenDy, iScreenDx, iScreenDw);
+            oScreen = deleteFullLines();
             iScreen.paste(oScreen, 0, 0);
             state = TetrisState.Running;
             idxBlockType = key - '0'; // copied from key
@@ -204,6 +213,33 @@ public class CTetris {
         // if (newBlockNeeded) { ... }
         // } end of while
     }
+
+    private void clearLine(Matrix screen, int fullLine) {
+        int[][] array = screen.get_array();
+        int[] lineToClear = array[fullLine];
+        for (int x = iScreenDw; x < iScreenDw + iScreenDx; x++) {
+            lineToClear[x] = 0;
+        }
+    }
+
+    private int getFullLine(Matrix screen) {
+        int[][] array = screen.get_array();
+        for (int line = 0; line < iScreenDy; line++) {
+            boolean isFullLine = true;
+            for (int x = iScreenDw; x < iScreenDx + iScreenDw; x++) {
+                if (array[line][x] < 1) {
+                    isFullLine = false;
+                    break;
+                }
+            }
+            if (isFullLine) {
+                return line;
+            }
+        }
+        return NO_FULL_LINE;
+    }
+
+    private static final int NO_FULL_LINE = -1;
 }
 
 class TetrisException extends Exception {
