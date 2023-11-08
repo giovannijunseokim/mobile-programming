@@ -4,162 +4,6 @@ import java.io.InputStreamReader;
 import java.util.Random;
 
 public class Main {
-    private static int[][][][] setOfBlockArrays = { // [7][4][?][?]
-            {
-                    {
-                            {11, 11},
-                            {11, 11}
-                    },
-                    {
-                            {11, 11},
-                            {11, 11}
-                    },
-                    {
-                            {11, 11},
-                            {11, 11}
-                    },
-                    {
-                            {11, 11},
-                            {11, 11}
-                    }
-            },
-            {
-                    {
-                            {0, 21, 0},
-                            {21, 21, 21},
-                            {0, 0, 0},
-                    },
-                    {
-                            {0, 21, 0},
-                            {0, 21, 21},
-                            {0, 21, 0},
-                    },
-                    {
-                            {0, 0, 0},
-                            {21, 21, 21},
-                            {0, 21, 0},
-                    },
-                    {
-                            {0, 21, 0},
-                            {21, 21, 0},
-                            {0, 21, 0},
-                    },
-            },
-            {
-                    {
-                            {31, 0, 0},
-                            {31, 31, 31},
-                            {0, 0, 0},
-                    },
-                    {
-                            {0, 31, 31},
-                            {0, 31, 0},
-                            {0, 31, 0},
-                    },
-                    {
-                            {0, 0, 0},
-                            {31, 31, 31},
-                            {0, 0, 31},
-                    },
-                    {
-                            {0, 31, 0},
-                            {0, 31, 0},
-                            {31, 31, 0},
-                    },
-            },
-            {
-                    {
-                            {0, 0, 41},
-                            {41, 41, 41},
-                            {0, 0, 0},
-                    },
-                    {
-                            {0, 41, 0},
-                            {0, 41, 0},
-                            {0, 41, 41},
-                    },
-                    {
-                            {0, 0, 0},
-                            {41, 41, 41},
-                            {41, 0, 0},
-                    },
-                    {
-                            {41, 41, 0},
-                            {0, 41, 0},
-                            {0, 41, 0},
-                    },
-            },
-            {
-                    {
-                            {0, 51, 0},
-                            {51, 51, 0},
-                            {51, 0, 0},
-                    },
-                    {
-                            {51, 51, 0},
-                            {0, 51, 51},
-                            {0, 0, 0},
-                    },
-                    {
-                            {0, 51, 0},
-                            {51, 51, 0},
-                            {51, 0, 0},
-                    },
-                    {
-                            {51, 51, 0},
-                            {0, 51, 51},
-                            {0, 0, 0},
-                    },
-            },
-            {
-                    {
-                            {0, 61, 0},
-                            {0, 61, 61},
-                            {0, 0, 61},
-                    },
-                    {
-                            {0, 0, 0},
-                            {0, 61, 61},
-                            {61, 61, 0},
-                    },
-                    {
-                            {0, 61, 0},
-                            {0, 61, 61},
-                            {0, 0, 61},
-                    },
-                    {
-                            {0, 0, 0},
-                            {0, 61, 61},
-                            {61, 61, 0},
-                    },
-            },
-            {
-                    {
-                            {0, 0, 0, 0},
-                            {71, 71, 71, 71},
-                            {0, 0, 0, 0},
-                            {0, 0, 0, 0},
-                    },
-                    {
-                            {0, 71, 0, 0},
-                            {0, 71, 0, 0},
-                            {0, 71, 0, 0},
-                            {0, 71, 0, 0},
-                    },
-                    {
-                            {0, 0, 0, 0},
-                            {71, 71, 71, 71},
-                            {0, 0, 0, 0},
-                            {0, 0, 0, 0},
-                    },
-                    {
-                            {0, 71, 0, 0},
-                            {0, 71, 0, 0},
-                            {0, 71, 0, 0},
-                            {0, 71, 0, 0},
-                    },
-            },
-    }; // end of setOfBlockArrays
     private static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     private static String line = null;
     private static int nKeys = 0;
@@ -189,13 +33,13 @@ public class Main {
                 switch (array[y][x]) {
                     case 0 -> System.out.print("□ ");
                     case 1 -> System.out.print("■ ");
-                    case 10 -> System.out.print("★ ");
-                    case 20 -> System.out.print("● ");
-                    case 30 -> System.out.print("◆ ");
-                    case 40 -> System.out.print("▲ ");
-                    case 50 -> System.out.print("♣ ");
-                    case 60 -> System.out.print("♠ ");
-                    case 70 -> System.out.print("♥ ");
+                    case 11 -> System.out.print("★ ");
+                    case 21 -> System.out.print("● ");
+                    case 31 -> System.out.print("◆ ");
+                    case 41 -> System.out.print("▲ ");
+                    case 51 -> System.out.print("♣ ");
+                    case 61 -> System.out.print("♠ ");
+                    case 71 -> System.out.print("♥ ");
                     default -> System.out.print("X ");
                 }
             }
@@ -206,7 +50,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
         char key;
         TetrisState state;
-        CTetris.init(setOfBlockArrays);
+        CTetris.init(SetOfBlockArrays.getSetOfBlockArrays());
         CTetris board = new CTetris(15, 10);
         Random random = new Random();
         key = (char) ('0' + random.nextInt(7));
