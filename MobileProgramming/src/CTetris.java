@@ -18,7 +18,13 @@ public class CTetris {
     private static Matrix[][] setOfBlockObjects;    // Matrix object arrays of all blocks
 
     private static Matrix[][] createSetOfBlocks(int[][][][] setOfArrays) throws Exception {
-        return null;
+        Matrix[][] setOfBlockObjects = new Matrix[nBlockTypes][nBlockDegrees];
+        for (int blockTypeIndex = 0; blockTypeIndex < nBlockTypes; blockTypeIndex++) {
+            for (int blockDegreeIndex = 0; blockDegreeIndex < nBlockDegrees; blockDegreeIndex++) {
+                setOfBlockObjects[blockTypeIndex][blockDegreeIndex] = new Matrix(setOfArrays[blockTypeIndex][blockDegreeIndex]);
+            }
+        }
+        return setOfBlockObjects;
     }
 
     private static int max(int a, int b) {
@@ -128,9 +134,7 @@ public class CTetris {
             state = TetrisState.Running;
             idxBlockType = key - '0'; // copied from key
             idxBlockDegree = 0;
-            //currBlk = setOfBlockObjects[idxBlockType][idxBlockDegree];
-            int[][] array = {{0, 1, 0}, {1, 1, 1}, {0, 0, 0}};
-            currBlk = new Matrix(array);
+            currBlk = setOfBlockObjects[idxBlockType][idxBlockDegree];
             top = 0;
             left = iScreenDw + iScreenDx / 2 - (currBlk.get_dx() + 1) / 2;
             tempBlk = iScreen.clip(top, left, top + currBlk.get_dy(), left + currBlk.get_dx());
