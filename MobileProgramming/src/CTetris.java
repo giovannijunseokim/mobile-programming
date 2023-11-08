@@ -160,8 +160,15 @@ public class CTetris {
                 top++;
                 break; // move down
             case 'w':
+                idxBlockDegree = (idxBlockDegree + 1) % 4;
+                currBlk = setOfBlockObjects[idxBlockType][idxBlockDegree];
                 break; // rotateCW
             case ' ':
+                do {
+                    top++;
+                    tempBlk = iScreen.clip(top, left, top + currBlk.get_dy(), left + currBlk.get_dx());
+                    tempBlk = tempBlk.add(currBlk);
+                } while (!tempBlk.isCrashed());
                 break; // drop the block
             default:
                 System.out.println("unknown key!");
@@ -181,8 +188,13 @@ public class CTetris {
                     state = TetrisState.NewBlock;
                     break; // undo: move up
                 case 'w':
+                    if (idxBlockDegree == 0) idxBlockDegree = 3;
+                    else idxBlockDegree = idxBlockDegree - 1;
+                    currBlk = setOfBlockObjects[idxBlockType][idxBlockDegree];
                     break; // undo: rotateCCW
                 case ' ':
+                    top--;
+                    state = TetrisState.NewBlock;
                     break; // undo: move up
             }
             tempBlk = iScreen.clip(top, left, top + currBlk.get_dy(), left + currBlk.get_dx());
